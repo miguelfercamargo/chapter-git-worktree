@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git Worktree — Múltiples ramas, cero stash</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="presentation">
+    <!-- Progress bar -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Slide 1: Portada -->
+    <section class="slide active" data-slide="1">
+      <div class="chapter-corner animate-in">BACKLAB · Chapter Backend</div>
+      <div class="slide-content center-content">
+        <h1 class="title-main animate-in delay-1">
+          Git <span class="highlight">Worktree</span>
+        </h1>
+        <p class="subtitle animate-in delay-2">Múltiples ramas, cero stash</p>
+        <div class="decorative-line animate-in delay-3"></div>
+        <div class="speakers animate-in delay-4">
+          <span>Gabriela León</span>
+          <span class="separator">·</span>
+          <span>Miguel Camargo</span>
+        </div>
+        <p class="meta animate-in delay-5">26 de junio, 2026</p>
+      </div>
+      <!-- Worktree branching animation (git-graph style, left side) -->
+      <svg class="worktree-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="branchGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00E472" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#00E472" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="fadeMask" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="white" stop-opacity="1"/>
+            <stop offset="60%" stop-color="white" stop-opacity="1"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </linearGradient>
+          <mask id="fadeRightMask">
+            <rect x="0" y="0" width="1200" height="800" fill="url(#fadeMask)"/>
+          </mask>
+          <radialGradient id="nodeGlow">
+            <stop offset="0%" stop-color="#00E472" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#00E472" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <g mask="url(#fadeRightMask)">
+          <!-- Main horizontal line -->
+          <line class="wt-branch main-line" x1="-50" y1="400" x2="600" y2="400" stroke="url(#branchGrad)" stroke-width="2"/>
+
+          <!-- Commit nodes on main -->
+          <circle class="wt-node main-1" cx="80" cy="400" r="5"/>
+          <circle class="wt-node origin" cx="200" cy="400" r="7"/>
+          <circle class="wt-node-glow" cx="200" cy="400" r="22" fill="url(#nodeGlow)"/>
+          <circle class="wt-node main-2" cx="380" cy="400" r="5"/>
+          <circle class="wt-node main-3" cx="520" cy="400" r="5"/>
+
+          <!-- Branch upper 1 -->
+          <polyline class="wt-branch upper-1" points="200,400 200,280 550,280" stroke="url(#branchGrad)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end up1" cx="550" cy="280" r="5"/>
+
+          <!-- Branch upper 2 -->
+          <polyline class="wt-branch upper-2" points="200,400 200,180 420,180" stroke="url(#branchGrad)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end up2" cx="420" cy="180" r="5"/>
+
+          <!-- Branch lower 1 -->
+          <polyline class="wt-branch lower-1" points="200,400 200,520 500,520" stroke="url(#branchGrad)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end low1" cx="500" cy="520" r="5"/>
+
+          <!-- Branch lower 2 -->
+          <polyline class="wt-branch lower-2" points="200,400 200,620 350,620" stroke="url(#branchGrad)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end low2" cx="350" cy="620" r="5"/>
+
+          <!-- Sub-commits on upper branches -->
+          <circle class="wt-node sub-node n1" cx="350" cy="280" r="3"/>
+          <circle class="wt-node sub-node n2" cx="450" cy="280" r="3"/>
+          <circle class="wt-node sub-node n3" cx="430" cy="520" r="3"/>
+        </g>
+      </svg>
+    </section>
+
+    <!-- Slide 2: Agenda -->
+    <section class="slide" data-slide="2">
+      <div class="slide-content">
+        <h2 class="animate-in">Hoy vamos a ver</h2>
+        <div class="agenda-list animate-in delay-1">
+          <div class="agenda-item">
+            <span class="agenda-number">01</span>
+            <span class="agenda-text">El problema que todos vivimos</span>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-number">02</span>
+            <span class="agenda-text">Qué es worktree y de dónde sale</span>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-number">03</span>
+            <span class="agenda-text">Qué pasa por debajo</span>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-number">04</span>
+            <span class="agenda-text">Comandos y casos de uso</span>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-number">05</span>
+            <span class="agenda-text">Demo en vivo</span>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-number">06</span>
+            <span class="agenda-text">Kahoot + Reto</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Escenario + Interrupción (secuencia por clicks) -->
+    <section class="slide" data-slide="3" data-steps="4">
+      <div class="slide-content center-content">
+        <h2 class="animate-in">El escenario</h2>
+        <div class="chat-sequence">
+          <div class="chat-msg step-1" data-step="1">
+            <span class="chat-icon">💻</span>
+            <div class="chat-bubble self">
+              <p>Llevas 2 horas concentrado en tu feature. Todo avanza. Estás en flujo.</p>
+            </div>
+          </div>
+          <div class="chat-msg step-2" data-step="2">
+            <span class="chat-icon">☕</span>
+            <div class="chat-bubble self">
+              <p>Archivos modificados, lógica a medio escribir, varios cambios sin guardar.</p>
+            </div>
+          </div>
+          <div class="chat-msg step-3" data-step="3">
+            <span class="chat-icon">🚨</span>
+            <div class="chat-bubble incoming">
+              <p class="chat-sender">Tech Lead — Teams</p>
+              <p>"Hay un bug en producción. Es urgente. ¿Puedes verlo ya?"</p>
+            </div>
+          </div>
+          <div class="chat-msg step-4" data-step="4">
+            <span class="chat-icon">😰</span>
+            <div class="chat-bubble self muted">
+              <p>Tu feature no está terminado. Tienes cambios sin commit. ¿Qué haces?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: El flujo doloroso -->
+    <section class="slide" data-slide="4">
+      <div class="slide-content">
+        <h2 class="animate-in">El flujo <span class="text-error">más común</span></h2>
+        <div class="code-block animate-in delay-1">
+          <div class="code-header">
+            <span class="code-dot red"></span>
+            <span class="code-dot yellow"></span>
+            <span class="code-dot green"></span>
+            <span class="code-title">terminal</span>
+          </div>
+          <pre><code><span class="code-comment"># Estás en feature/login con cambios sin commit...</span>
+<span class="code-cmd">git stash</span>                  <span class="code-comment"># guardar cambios temporalmente</span>
+<span class="code-cmd">git checkout main</span>
+<span class="code-cmd">git pull origin main</span>
+<span class="code-cmd">git checkout -b hotfix/bug</span>
+<span class="code-comment"># ... arreglas el bug ...</span>
+<span class="code-cmd">git push origin hotfix/bug</span>
+<span class="code-cmd">git checkout feature/login</span>
+<span class="code-cmd">git stash pop</span>              <span class="code-error-text">⚠ posible conflicto</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: ¿Cómo lo solucionas hoy? (pregunta + reveal) -->
+    <section class="slide" data-slide="5" data-steps="3">
+      <div class="slide-content center-content">
+        <div class="icon-large animate-in">🤷</div>
+        <h2 class="animate-in delay-1">¿Cómo lo solucionarías hoy?</h2>
+        <div class="chat-msg step-1" data-step="1">
+          <p class="subtitle">La respuesta más común: <code>git stash</code></p>
+        </div>
+        <div class="chat-msg step-2" data-step="2">
+          <div class="stash-reveal">
+            <div class="stash-what">
+              <h3>¿Qué hace?</h3>
+              <p>Guarda tus cambios sin commit en una pila temporal y te deja la rama "limpia" para poder cambiar.</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-msg step-3" data-step="3">
+          <div class="stash-reveal">
+            <div class="stash-weak">
+              <h3>¿Cuáles son sus limitaciones?</h3>
+              <div class="stash-problems">
+                <div class="stash-item">
+                  <span class="stash-bullet">→</span>
+                  <p>Cada cambio se guarda con un índice: <code>stash@{0}</code>, <code>stash@{1}</code>... difícil hacerle seguimiento</p>
+                </div>
+                <div class="stash-item">
+                  <span class="stash-bullet">→</span>
+                  <p>Si la rama avanzó, <code>stash pop</code> puede <strong class="text-error">generar conflictos</strong></p>
+                </div>
+                <div class="stash-item">
+                  <span class="stash-bullet">→</span>
+                  <p>Aún así <strong>tuviste que cambiar de rama</strong> — el cambio de contexto ya ocurrió</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: El costo real -->
+    <section class="slide" data-slide="6">
+      <div class="slide-content center-content">
+        <h2 class="animate-in">El costo real</h2>
+        <div class="stat-block animate-in delay-1">
+          <span class="stat-number">23 min</span>
+          <span class="stat-label">lo que tarda un desarrollador en recuperar el foco<br>después de una interrupción</span>
+        </div>
+        <p class="text-muted animate-in delay-2">— University of California, Irvine (2004)</p>
+        <p class="big-text animate-in delay-3">
+          El stash no solo arriesga conflictos.<br>
+          <strong>Rompe tu concentración.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 7: El reveal -->
+    <section class="slide" data-slide="7">
+      <div class="slide-content center-content">
+        <h2 class="animate-in">¿Y si no tuvieras que<br><span class="highlight">cambiar de rama</span>?</h2>
+        <p class="big-text animate-in delay-1">
+          ¿Y si pudieras abrir otra carpeta,<br>
+          con otra rama, sin tocar nada de lo que estás haciendo?
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 8: Definición -->
+    <section class="slide" data-slide="8">
+      <div class="slide-content center-content">
+        <div class="badge animate-in">Concepto</div>
+        <h2 class="animate-in delay-1">Git <span class="highlight">Worktree</span></h2>
+        <p class="big-text animate-in delay-2">
+          Un directorio de trabajo adicional<br>
+          vinculado al <strong>mismo repositorio</strong>.
+        </p>
+        <div class="features-row animate-in delay-3">
+          <div class="feature-chip">📁 Cada uno con su rama</div>
+          <div class="feature-chip">🔗 Comparten historia</div>
+          <div class="feature-chip">⚡ Creación instantánea</div>
+          <div class="feature-chip">🚫 Sin clonar, sin stash</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Modelo mental -->
+    <section class="slide" data-slide="9">
+      <div class="slide-content">
+        <h2 class="animate-in">Modelo mental</h2>
+        <div class="diagram-worktree animate-in delay-1">
+          <div class="wt-folder main">
+            <div class="wt-icon">📁</div>
+            <div class="wt-name">mi-proyecto/</div>
+            <div class="wt-branch">main</div>
+          </div>
+          <div class="wt-folder feature">
+            <div class="wt-icon">📁</div>
+            <div class="wt-name">mi-proyecto-feature/</div>
+            <div class="wt-branch">feature/login</div>
+          </div>
+          <div class="wt-folder hotfix">
+            <div class="wt-icon">📁</div>
+            <div class="wt-name">mi-proyecto-hotfix/</div>
+            <div class="wt-branch">hotfix/bug-123</div>
+          </div>
+          <div class="wt-center">
+            <div class="wt-git">.git</div>
+            <p>Un solo repositorio</p>
+          </div>
+        </div>
+        <p class="text-muted animate-in delay-2">Como escritorios virtuales del sistema operativo, pero para git.</p>
+      </div>
+    </section>
+
+    <!-- Slide 10: Historia -->
+    <section class="slide" data-slide="10">
+      <div class="slide-content">
+        <h2 class="animate-in">Un poco de historia</h2>
+        <div class="timeline animate-in delay-1">
+          <div class="timeline-item">
+            <span class="timeline-year">2015</span>
+            <div class="timeline-content">
+              <strong>Git 2.5</strong> — Se introduce <code>git worktree</code> como feature experimental.
+              <p class="text-muted">Contribución principal: Nguyễn Thái Ngọc Duy</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-year">2017</span>
+            <div class="timeline-content">
+              <strong>Git 2.15</strong> — Se agrega <code>worktree prune</code> y mejoras de estabilidad.
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-year">2018</span>
+            <div class="timeline-content">
+              <strong>Git 2.17+</strong> — Considerado estable para uso en producción.
+            </div>
+          </div>
+          <div class="timeline-item active">
+            <span class="timeline-year">2026</span>
+            <div class="timeline-content">
+              <strong>11 años disponible.</strong> Aún poco conocido en el día a día.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11: Comparativa -->
+    <section class="slide" data-slide="11">
+      <div class="slide-content">
+        <h2 class="animate-in">Worktree vs Clone vs Stash</h2>
+        <div class="comparison-table animate-in delay-1">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Stash</th>
+                <th>Clone</th>
+                <th class="highlight-col">Worktree</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Velocidad</td>
+                <td>Rápido</td>
+                <td>Lento (red)</td>
+                <td class="highlight-col">Instantáneo</td>
+              </tr>
+              <tr>
+                <td>Espacio en disco</td>
+                <td>Nada extra</td>
+                <td>Duplica todo</td>
+                <td class="highlight-col">Solo archivos de trabajo</td>
+              </tr>
+              <tr>
+                <td>Riesgo de conflicto</td>
+                <td class="text-error">Alto</td>
+                <td>Ninguno</td>
+                <td class="highlight-col">Ninguno</td>
+              </tr>
+              <tr>
+                <td>Cambio de contexto</td>
+                <td class="text-error">Sí</td>
+                <td>No</td>
+                <td class="highlight-col">No</td>
+              </tr>
+              <tr>
+                <td>Historia compartida</td>
+                <td>Sí</td>
+                <td>No (copia)</td>
+                <td class="highlight-col">Sí</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12: Intro internals -->
+    <section class="slide" data-slide="12">
+      <div class="slide-content center-content">
+        <div class="badge animate-in">Internals</div>
+        <h2 class="animate-in delay-1">Antes de ir al "cómo"...</h2>
+        <p class="big-text animate-in delay-2">
+          Entendamos qué pasa por debajo.<br>
+          No es magia — es una <strong>estructura de archivos</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 13: Anatomía de .git -->
+    <section class="slide" data-slide="13">
+      <div class="slide-content">
+        <h2 class="animate-in">Anatomía de <code>.git/</code></h2>
+        <div class="git-anatomy animate-in delay-1">
+          <div class="git-item">
+            <span class="git-folder">objects/</span>
+            <span class="git-desc">Blobs, trees, commits — toda la historia</span>
+          </div>
+          <div class="git-item">
+            <span class="git-folder">refs/</span>
+            <span class="git-desc">Punteros a commits (ramas, tags)</span>
+          </div>
+          <div class="git-item">
+            <span class="git-folder">HEAD</span>
+            <span class="git-desc">¿En qué rama estás ahora?</span>
+          </div>
+          <div class="git-item">
+            <span class="git-folder">index</span>
+            <span class="git-desc">El staging area (lo que va en el próximo commit)</span>
+          </div>
+          <div class="git-item highlight-item">
+            <span class="git-folder">worktrees/</span>
+            <span class="git-desc">← Aquí ocurre la lógica de worktree</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 14: Qué pasa cuando haces worktree add -->
+    <section class="slide" data-slide="14">
+      <div class="slide-content">
+        <h2 class="animate-in">¿Qué pasa cuando haces <code class="highlight">worktree add</code>?</h2>
+        <div class="steps-vertical animate-in delay-1">
+          <div class="step-item">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <strong>En el repo principal:</strong>
+              <p>Git crea <code>.git/worktrees/&lt;nombre&gt;/</code> con su propio HEAD, index y refs</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <strong>En la carpeta nueva:</strong>
+              <p>Recibe un <em>archivo</em> <code>.git</code> (no carpeta) que apunta de vuelta al principal</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <strong>Resultado:</strong>
+              <p>Dos directorios de trabajo independientes, un solo repositorio compartido</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 15: Estructura física -->
+    <section class="slide" data-slide="15">
+      <div class="slide-content">
+        <h2 class="animate-in">La estructura física</h2>
+        <div class="two-columns animate-in delay-1">
+          <div class="column">
+            <h3 class="col-title">Repo principal</h3>
+            <div class="tree-view">
+              <div class="tree-line"><span class="tree-folder">mi-proyecto/</span></div>
+              <div class="tree-line indent-1"><span class="tree-folder">.git/</span></div>
+              <div class="tree-line indent-2">objects/</div>
+              <div class="tree-line indent-2">refs/</div>
+              <div class="tree-line indent-2">HEAD</div>
+              <div class="tree-line indent-2 highlight-line"><span class="tree-folder">worktrees/</span></div>
+              <div class="tree-line indent-3 highlight-line"><span class="tree-folder">hotfix/</span></div>
+              <div class="tree-line indent-4">HEAD</div>
+              <div class="tree-line indent-4">index</div>
+              <div class="tree-line indent-4">refs/</div>
+            </div>
+          </div>
+          <div class="column">
+            <h3 class="col-title">Worktree (hotfix)</h3>
+            <div class="tree-view">
+              <div class="tree-line"><span class="tree-folder">mi-proyecto-hotfix/</span></div>
+              <div class="tree-line indent-1 highlight-line">.git <span class="text-muted">← archivo de texto</span></div>
+              <div class="tree-line indent-1">auth.js</div>
+              <div class="tree-line indent-1">README.md</div>
+              <div class="tree-line indent-1">...</div>
+            </div>
+            <div class="file-content animate-in delay-2">
+              <p class="file-label">Contenido de .git:</p>
+              <code>gitdir: ../mi-proyecto/.git/worktrees/hotfix</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 16: Reglas y restricciones -->
+    <section class="slide" data-slide="16">
+      <div class="slide-content">
+        <h2 class="animate-in">Reglas y restricciones</h2>
+        <div class="rules-grid animate-in delay-1">
+          <div class="rule-card">
+            <div class="rule-icon">🚫</div>
+            <h3>Ramas únicas</h3>
+            <p>No puedes tener la misma rama en dos worktrees. Cada HEAD debe apuntar a una rama distinta.</p>
+          </div>
+          <div class="rule-card">
+            <div class="rule-icon">🏠</div>
+            <h3>Worktree principal protegido</h3>
+            <p>El worktree donde hiciste <code>git clone</code> es el propietario del <code>.git</code>. No se puede eliminar.</p>
+          </div>
+          <div class="rule-card">
+            <div class="rule-icon">🔗</div>
+            <h3>Comparten</h3>
+            <p>Historia, remotes, stash, config global del repo.</p>
+          </div>
+          <div class="rule-card">
+            <div class="rule-icon">🔒</div>
+            <h3>NO comparten</h3>
+            <p>Archivos de trabajo (working directory) ni el staging area (index).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 17: Comandos -->
+    <section class="slide" data-slide="17">
+      <div class="slide-content">
+        <div class="badge animate-in">Comandos</div>
+        <h2 class="animate-in delay-1">Todo lo que necesitas</h2>
+        <div class="commands-grid animate-in delay-2">
+          <div class="command-card">
+            <code class="cmd-code">git worktree add ../ruta rama</code>
+            <p>Crear un nuevo worktree</p>
+          </div>
+          <div class="command-card">
+            <code class="cmd-code">git worktree add ../ruta -b nueva base</code>
+            <p>Crear worktree con rama nueva basada en otra</p>
+          </div>
+          <div class="command-card">
+            <code class="cmd-code">git worktree list</code>
+            <p>Ver todos los worktrees activos</p>
+          </div>
+          <div class="command-card">
+            <code class="cmd-code">git worktree remove ../ruta</code>
+            <p>Eliminar un worktree</p>
+          </div>
+          <div class="command-card">
+            <code class="cmd-code">git worktree prune</code>
+            <p>Limpiar referencias a worktrees que ya no existen en disco</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 18: Casos de uso -->
+    <section class="slide" data-slide="18">
+      <div class="slide-content">
+        <h2 class="animate-in">Casos de uso reales</h2>
+        <div class="use-cases animate-in delay-1">
+          <div class="use-case-item">
+            <span class="use-case-icon">🔥</span>
+            <div>
+              <strong>Hotfix urgente</strong>
+              <p>Arreglar un bug sin perder el progreso de tu feature</p>
+            </div>
+          </div>
+          <div class="use-case-item">
+            <span class="use-case-icon">👀</span>
+            <div>
+              <strong>Code review</strong>
+              <p>Revisar un PR sin salir de tu rama actual</p>
+            </div>
+          </div>
+          <div class="use-case-item">
+            <span class="use-case-icon">🧪</span>
+            <div>
+              <strong>Tests largos</strong>
+              <p>Correr tests en una rama mientras desarrollas en otra</p>
+            </div>
+          </div>
+          <div class="use-case-item">
+            <span class="use-case-icon">🔀</span>
+            <div>
+              <strong>Comparar ramas</strong>
+              <p>Dos carpetas lado a lado para ver diferencias de comportamiento</p>
+            </div>
+          </div>
+          <div class="use-case-item">
+            <span class="use-case-icon">🤖</span>
+            <div>
+              <strong>Agente IA en paralelo</strong>
+              <p>Delegar una tarea a un agente en su propio worktree mientras tú sigues trabajando</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 19: Cuándo NO usarlo -->
+    <section class="slide" data-slide="19">
+      <div class="slide-content">
+        <h2 class="animate-in">¿Cuándo <span class="text-error">no</span> usarlo?</h2>
+        <div class="not-use-list animate-in delay-1">
+          <div class="not-use-item">
+            <span class="not-icon">⚠️</span>
+            <p>Si solo trabajas en una rama a la vez y los cambios son rápidos (2 minutos) — un stash está bien</p>
+          </div>
+          <div class="not-use-item">
+            <span class="not-icon">⚠️</span>
+            <p>Si tu proyecto tiene <code>node_modules</code> pesados — cada worktree necesita su propio install</p>
+          </div>
+          <div class="not-use-item">
+            <span class="not-icon">⚠️</span>
+            <p>Si tu IDE no maneja bien múltiples carpetas del mismo proyecto abiertas simultáneamente</p>
+          </div>
+        </div>
+        <p class="callout info animate-in delay-2">No es que no funcione — es que el beneficio puede no justificar el setup en esos casos.</p>
+      </div>
+    </section>
+
+    <!-- Slide 20: Transición a demo -->
+    <section class="slide" data-slide="20">
+      <div class="slide-content center-content">
+        <div class="icon-large animate-in">🎬</div>
+        <h2 class="animate-in delay-1">Ahora veámoslo en acción</h2>
+        <div class="demo-parts animate-in delay-2">
+          <div class="demo-part">
+            <span class="demo-letter">A</span>
+            <span>Flujo básico de worktree</span>
+          </div>
+          <div class="demo-part">
+            <span class="demo-letter">B</span>
+            <span>Hotfix delegado a Kiro (IA)</span>
+          </div>
+          <div class="demo-part">
+            <span class="demo-letter">C</span>
+            <span>Code review sin cambiar de rama</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 21: Placeholder demo -->
+    <section class="slide" data-slide="21">
+      <div class="slide-content center-content">
+        <div class="demo-live-badge animate-in">EN VIVO</div>
+        <h2 class="animate-in delay-1">Demostración</h2>
+        <p class="big-text animate-in delay-2">Pasamos a la terminal</p>
+      </div>
+    </section>
+
+    <!-- Home button -->
+    <button class="home-btn" id="homeBtn" aria-label="Volver al inicio">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </button>
+
+    <!-- Transition node (animated on slide change) -->
+    <div class="transition-node" id="transitionNode" aria-hidden="true">
+      <svg viewBox="0 0 240 20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="transLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00E472" stop-opacity="0.25"/>
+            <stop offset="30%" stop-color="#00E472" stop-opacity="0.5"/>
+            <stop offset="70%" stop-color="#00E472" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#00E472" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <!-- Origin node (left) -->
+        <circle class="trans-origin" cx="10" cy="10" r="4" fill="#00E472"/>
+        <!-- Line drawn from left to right, gradient fades from origin -->
+        <line class="trans-line" x1="10" y1="10" x2="230" y2="10" stroke="url(#transLineGrad)" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Target node (right) -->
+        <circle class="trans-target" cx="230" cy="10" r="5" fill="#00E472"/>
+      </svg>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-controls">
+      <button class="nav-btn" id="prevBtn" aria-label="Anterior">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <span class="slide-counter" id="slideCounter">1 / 21</span>
+      <button class="nav-btn" id="nextBtn" aria-label="Siguiente">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint">
+      <kbd>←</kbd> <kbd>→</kbd> para navegar
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
