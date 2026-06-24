@@ -213,12 +213,12 @@ Cambia a compartir la terminal. Da 3 segundos para que la gente vea el cambio.
 
 ---
 
-## Slide 22: Kahoot
+## Slide 22: Quizizz
 Después de la demo, vuelve a las slides:
 
-> "Bien, eso fue la demo. ¿Quedó claro el concepto? Vamos a comprobarlo. Saquen el celular o abran otra pestaña, entren a kahoot.it, y pongan el PIN que les voy a mostrar ahora. Son 10 preguntas rápidas."
+> "Bien, eso fue la demo. ¿Quedó claro el concepto? Vamos a comprobarlo. Saquen el celular o abran otra pestaña, entren a quizizz.com/join, y pongan el código que les voy a mostrar ahora. Son 10 preguntas rápidas."
 
-Comparte la pantalla del Kahoot. Espera a que entren.
+Comparte la pantalla del Quizizz. Espera a que entren.
 
 > "Veo que ya entraron [X] personas... esperamos unos segundos más... listo, arrancamos."
 
