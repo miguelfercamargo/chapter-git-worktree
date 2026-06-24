@@ -917,6 +917,27 @@ code { font-family: 'JetBrains Mono', 'Fira Code', monospace; background: var(--
   50% { opacity: 0.8; transform: scale(1.3); }
 }
 
+/* ---- Kahoot Block ---- */
+.kahoot-block {
+  margin-top: 24px;
+  padding: 20px 32px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 600px;
+}
+
+.kahoot-instructions {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.kahoot-instructions strong {
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
 /* ---- Floating Decorations ---- */
 .slide-decoration {
   position: absolute;

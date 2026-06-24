@@ -609,10 +609,10 @@
       </div>
     </section>
 
-    <!-- Slide 20: Transición a demo -->
+    <!-- Slide 20: Partida a la demo -->
     <section class="slide" data-slide="20">
       <div class="slide-content center-content">
-        <div class="icon-large animate-in">🎬</div>
+        <div class="demo-live-badge animate-in">EN VIVO</div>
         <h2 class="animate-in delay-1">Ahora veámoslo en acción</h2>
         <div class="demo-parts animate-in delay-2">
           <div class="demo-part">
@@ -631,13 +631,91 @@
       </div>
     </section>
 
-    <!-- Slide 21: Placeholder demo -->
+    <!-- Slide 21: Kahoot -->
     <section class="slide" data-slide="21">
       <div class="slide-content center-content">
-        <div class="demo-live-badge animate-in">EN VIVO</div>
-        <h2 class="animate-in delay-1">Demostración</h2>
-        <p class="big-text animate-in delay-2">Pasamos a la terminal</p>
+        <div class="icon-large animate-in">🎮</div>
+        <h2 class="animate-in delay-1">A poner a prueba lo aprendido</h2>
+        <p class="big-text animate-in delay-2">
+          10 preguntas rápidas para ver<br>
+          qué tan bien quedó el concepto.
+        </p>
+        <div class="kahoot-block animate-in delay-3">
+          <p class="kahoot-instructions">Ingresa en <strong>kahoot.it</strong> con el PIN que aparecerá en pantalla</p>
+        </div>
       </div>
+    </section>
+
+    <!-- Slide 22: Cierre (estilo portada) -->
+    <section class="slide" data-slide="22">
+      <div class="chapter-corner animate-in">BACKLAB · Chapter Backend</div>
+      <div class="slide-content center-content">
+        <h1 class="title-main animate-in delay-1">
+          Git <span class="highlight">Worktree</span>
+        </h1>
+        <p class="subtitle animate-in delay-2">Múltiples ramas, cero stash</p>
+        <div class="decorative-line animate-in delay-3"></div>
+        <div class="speakers animate-in delay-4">
+          <span>Gabriela León</span>
+          <span class="separator">·</span>
+          <span>Miguel Camargo</span>
+        </div>
+        <p class="meta animate-in delay-5">BACKLAB · Chapter Backend · ADL</p>
+      </div>
+      <!-- Worktree branching animation (mirrors slide 1) -->
+      <svg class="worktree-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="branchGradEnd" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00E472" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#00E472" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="fadeMaskEnd" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="white" stop-opacity="1"/>
+            <stop offset="60%" stop-color="white" stop-opacity="1"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </linearGradient>
+          <mask id="fadeRightMaskEnd">
+            <rect x="0" y="0" width="1200" height="800" fill="url(#fadeMaskEnd)"/>
+          </mask>
+          <radialGradient id="nodeGlowEnd">
+            <stop offset="0%" stop-color="#00E472" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#00E472" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <g mask="url(#fadeRightMaskEnd)" transform="translate(1200,0) scale(-1,1)">
+          <!-- Main horizontal line -->
+          <line class="wt-branch main-line" x1="-50" y1="400" x2="600" y2="400" stroke="url(#branchGradEnd)" stroke-width="2"/>
+
+          <!-- Commit nodes on main -->
+          <circle class="wt-node main-1" cx="80" cy="400" r="5"/>
+          <circle class="wt-node origin" cx="200" cy="400" r="7"/>
+          <circle class="wt-node-glow" cx="200" cy="400" r="22" fill="url(#nodeGlowEnd)"/>
+          <circle class="wt-node main-2" cx="380" cy="400" r="5"/>
+          <circle class="wt-node main-3" cx="520" cy="400" r="5"/>
+
+          <!-- Branch upper 1 -->
+          <polyline class="wt-branch upper-1" points="200,400 200,280 550,280" stroke="url(#branchGradEnd)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end up1" cx="550" cy="280" r="5"/>
+
+          <!-- Branch upper 2 -->
+          <polyline class="wt-branch upper-2" points="200,400 200,180 420,180" stroke="url(#branchGradEnd)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end up2" cx="420" cy="180" r="5"/>
+
+          <!-- Branch lower 1 -->
+          <polyline class="wt-branch lower-1" points="200,400 200,520 500,520" stroke="url(#branchGradEnd)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end low1" cx="500" cy="520" r="5"/>
+
+          <!-- Branch lower 2 -->
+          <polyline class="wt-branch lower-2" points="200,400 200,620 350,620" stroke="url(#branchGradEnd)" fill="none" stroke-width="2"/>
+          <circle class="wt-node branch-end low2" cx="350" cy="620" r="5"/>
+
+          <!-- Sub-commits -->
+          <circle class="wt-node sub-node n1" cx="350" cy="280" r="3"/>
+          <circle class="wt-node sub-node n2" cx="450" cy="280" r="3"/>
+          <circle class="wt-node sub-node n3" cx="430" cy="520" r="3"/>
+        </g>
+      </svg>
     </section>
 
     <!-- Home button -->
@@ -675,7 +753,7 @@
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
       </button>
-      <span class="slide-counter" id="slideCounter">1 / 21</span>
+      <span class="slide-counter" id="slideCounter">1 / 22</span>
       <button class="nav-btn" id="nextBtn" aria-label="Siguiente">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="9 18 15 12 9 6"></polyline>
