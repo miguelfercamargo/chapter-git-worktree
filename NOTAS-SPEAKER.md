@@ -104,9 +104,15 @@ Pásala rápido. 15 segundos máximo:
 ## Slide 11: "Worktree vs Clone vs Stash" (tabla)
 **No leas la tabla fila por fila.** La gente la está viendo. Resume:
 
-> "En pantalla tienen la comparación completa. El resumen rápido: stash es para pausar temporalmente. Clone es para aislar completamente con su propia historia. Worktree es el punto medio: contextos paralelos dentro del mismo repo."
+> "En pantalla tienen la comparación completa. Quiero que se fijen en las dos filas nuevas: 'cambio de contexto' y 'trabajo en progreso'. Ahí está la diferencia real."
 
-> "Si se preguntan '¿y por qué no clono de nuevo?': porque un clone descarga todo otra vez, tiene remotes independientes, y no comparte config. Worktree es instantáneo — crea una carpeta y listo."
+> "Con stash, ustedes pausan lo que están haciendo, se van a otra rama, resuelven, y vuelven. Es un pause/resume. Si la rama avanzó mientras no estaban, posible conflicto."
+
+> "Con worktree no hay pause. Su feature sigue activa en su carpeta. Abren OTRA carpeta con otra rama. Son dos contextos vivos al mismo tiempo. Pueden tener los dos abiertos en terminales separadas."
+
+> "Piénsenlo así: stash es como poner pausa a una película para ver otra. Worktree es tener dos pantallas."
+
+> "Si alguien les dice 'pero con un stash hago lo mismo' — técnicamente sí resuelves el problema. Pero con stash cambiaste de rama, perdiste contexto, y cuando vuelves arriesgas conflictos. Con worktree no tocas nada de lo que estabas haciendo."
 
 ---
 
@@ -161,18 +167,42 @@ Pásala rápido, mencionando cada caso:
 
 ---
 
-## Slide 19: "¿Cuándo no compensa?"
-**Importante para credibilidad.** No vendas worktree como solución a todo:
+## Slide 19: "¿Cómo paso mi feature a main?"
+**Esta slide responde una pregunta que va a surgir. Adelántate:**
 
-> "Y para ser honestos: no todo es worktree. Si la interrupción es de dos minutos y un stash simple alcanza, no tiene sentido crear un worktree. Si tu proyecto es un monolito pesado con un npm install de 5 minutos — recuerden que cada worktree necesita su propio node_modules — ahí evalúen si vale la pena. Y si necesitan aislar puertos, Docker, bases de datos — ahí un clone completo o un contenedor es mejor opción."
+> "Ok, una pregunta que seguro se están haciendo: si tengo mi feature en un worktree y main en otro... ¿cómo hago el merge? ¿Cómo creo el PR?"
 
-> "Ahora, si es solo un hotfix rápido donde solo van a tocar un archivo y hacer push, no necesitan instalar dependencias en ese worktree. Depende del caso."
+> "La respuesta corta: igual que siempre. El flujo de merge no cambia."
 
-> "Recuerden: worktree comparte la historia de Git. No comparte archivos de trabajo, ni dependencias, ni procesos."
+Click 1 (Opción A):
+> "Si quieren merge local: van al worktree de main, hacen git merge feature/login, y listo. El commit queda en main."
+
+Click 2 (Opción B):
+> "O lo más común en equipos: hacen push de su feature y crean el PR en GitHub como siempre. No importa desde qué carpeta hacen el push."
+
+Click 3 (Punto clave):
+> "El punto clave aquí: las ramas existen en el REPOSITORIO, no en la carpeta. Los worktrees son solo ventanas — lentes — para ver esas ramas. No tienen que 'pasar' nada de un worktree a otro. Es el mismo repo por debajo."
 
 ---
 
-## Slide 20: "Ahora veámoslo en acción" (intro demo)
+## Slide 20: "¿Cuándo no compensa?"
+**Importante para credibilidad.** No vendas worktree como solución a todo:
+
+> "Y para ser honestos: no todo es worktree. Si la interrupción es de dos minutos y un stash simple alcanza, no tiene sentido crear un worktree. Si tu proyecto es un monolito pesado con un npm install de 5 minutos — recuerden que cada worktree necesita su propio node_modules — ahí evalúen si vale la pena."
+
+> "Acá quiero ser super claro con algo porque genera confusión: ¿qué se comparte y qué no?"
+
+> "Se comparte: la historia de Git. Commits, objects, ramas, tags, remotes, configuración. Eso vive en .git y es uno solo."
+
+> "NO se comparte: los archivos de trabajo. Cada worktree es un checkout independiente. Entonces si tu repo necesita npm install, cada worktree necesita su propio npm install. Si ocupa 2GB en node_modules, pues son 2GB por worktree."
+
+> "Ahora, si es solo un hotfix rápido donde van a tocar un archivo y hacer push — no necesitan instalar dependencias en ese worktree. Depende del caso."
+
+> "Recuerden: worktree te ahorra descargar la historia de Git. No te ahorra el setup del proyecto."
+
+---
+
+## Slide 21: "Ahora veámoslo en acción" (intro demo)
 Subir la energía. Transición a la demo:
 
 > "Listo, suficiente teoría. Vamos a verlo en vivo en mi terminal. Van a ser tres partes: flujo básico de worktree, un hotfix delegado a Kiro que es un agente de IA, y un code review rápido. Voy a compartir mi terminal..."
@@ -183,7 +213,7 @@ Cambia a compartir la terminal. Da 3 segundos para que la gente vea el cambio.
 
 ---
 
-## Slide 21: Kahoot
+## Slide 22: Kahoot
 Después de la demo, vuelve a las slides:
 
 > "Bien, eso fue la demo. ¿Quedó claro el concepto? Vamos a comprobarlo. Saquen el celular o abran otra pestaña, entren a kahoot.it, y pongan el PIN que les voy a mostrar ahora. Son 10 preguntas rápidas."
@@ -194,7 +224,7 @@ Comparte la pantalla del Kahoot. Espera a que entren.
 
 ---
 
-## Slide 22: Cierre
+## Slide 23: Cierre
 Después del Kahoot:
 
 > "Muy bien, gracias por participar. Para cerrar: worktree es un subcomando nativo de Git. No instala nada. Les permite tener múltiples ramas activas al mismo tiempo sin stash ni cambios de contexto. Y como vieron en la demo, habilita que un agente de IA trabaje en una rama mientras ustedes siguen productivos en otra."
