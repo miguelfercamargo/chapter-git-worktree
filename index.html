@@ -612,19 +612,19 @@
           <div class="chat-msg step-1" data-step="1">
             <div class="command-card">
               <p><strong>Opción A:</strong> Merge desde el worktree de main</p>
-              <code class="cmd-code">cd ../mi-proyecto-main && git merge feature/login</code>
+              <code class="cmd-code">cd ../main && git merge feature/login</code>
             </div>
           </div>
           <div class="chat-msg step-2" data-step="2">
             <div class="command-card">
               <p><strong>Opción B:</strong> Push + PR (lo más común)</p>
-              <code class="cmd-code">git push origin feature/login → abrir PR en GitHub</code>
+              <code class="cmd-code">git push → abrir PR en GitHub</code>
             </div>
           </div>
           <div class="chat-msg step-3" data-step="3">
             <div class="command-card">
               <p><strong>Punto clave:</strong></p>
-              <p>Las ramas existen en el repositorio. Los worktrees son solo <em>ventanas</em> a esas ramas. No hay que "pasar" nada de un worktree a otro.</p>
+              <p>Las ramas viven en el repo. Los worktrees son <em>ventanas</em>. No hay que "pasar" nada entre carpetas.</p>
             </div>
           </div>
         </div>
