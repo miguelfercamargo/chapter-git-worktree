@@ -112,7 +112,7 @@
           </div>
           <div class="agenda-item">
             <span class="agenda-number">06</span>
-            <span class="agenda-text">Kahoot + Reto</span>
+            <span class="agenda-text">Kahoot</span>
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@
           <div class="chat-msg step-2" data-step="2">
             <span class="chat-icon">☕</span>
             <div class="chat-bubble self">
-              <p>Archivos modificados, lógica a medio escribir, varios cambios sin guardar.</p>
+              <p>Archivos modificados, lógica a medio escribir, varios cambios locales sin commit.</p>
             </div>
           </div>
           <div class="chat-msg step-3" data-step="3">
@@ -220,15 +220,24 @@
     <section class="slide" data-slide="6">
       <div class="slide-content center-content">
         <h2 class="animate-in">El costo real</h2>
-        <div class="stat-block animate-in delay-1">
-          <span class="stat-number">23 min</span>
-          <span class="stat-label">lo que tarda un desarrollador en recuperar el foco<br>después de una interrupción</span>
-        </div>
-        <p class="text-muted animate-in delay-2">— University of California, Irvine (2004)</p>
-        <p class="big-text animate-in delay-3">
-          El stash no solo arriesga conflictos.<br>
-          <strong>Rompe tu concentración.</strong>
+        <p class="big-text animate-in delay-1">
+          La interrupción va a ocurrir de todos modos.<br>
+          Lo que worktree evita es sumar <strong>fricción técnica</strong>:
         </p>
+        <div class="stash-problems animate-in delay-2">
+          <div class="stash-item">
+            <span class="stash-bullet">→</span>
+            <p>Guardar y restaurar cambios manualmente</p>
+          </div>
+          <div class="stash-item">
+            <span class="stash-bullet">→</span>
+            <p>Reconstruir el estado del directorio al volver</p>
+          </div>
+          <div class="stash-item">
+            <span class="stash-bullet">→</span>
+            <p>Resolver conflictos que no tenían por qué existir</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -249,14 +258,14 @@
         <div class="badge animate-in">Concepto</div>
         <h2 class="animate-in delay-1">Git <span class="highlight">Worktree</span></h2>
         <p class="big-text animate-in delay-2">
-          Un directorio de trabajo adicional<br>
-          vinculado al <strong>mismo repositorio</strong>.
+          Otro directorio de trabajo. Otro HEAD.<br>
+          El <strong>mismo repositorio</strong>.
         </p>
         <div class="features-row animate-in delay-3">
-          <div class="feature-chip">📁 Cada uno con su rama</div>
-          <div class="feature-chip">🔗 Comparten historia</div>
-          <div class="feature-chip">⚡ Creación instantánea</div>
-          <div class="feature-chip">🚫 Sin clonar, sin stash</div>
+          <div class="feature-chip">📁 Cada uno con su propio HEAD</div>
+          <div class="feature-chip">🔗 Comparten objetos y refs</div>
+          <div class="feature-chip">⚡ No requiere descarga</div>
+          <div class="feature-chip">🧩 No reemplaza stash, lo complementa</div>
         </div>
       </div>
     </section>
@@ -298,26 +307,20 @@
           <div class="timeline-item">
             <span class="timeline-year">2015</span>
             <div class="timeline-content">
-              <strong>Git 2.5</strong> — Se introduce <code>git worktree</code> como feature experimental.
-              <p class="text-muted">Contribución principal: Nguyễn Thái Ngọc Duy</p>
+              <strong>Git 2.5</strong> — Se introduce <code>git worktree</code> con <code>add</code>, <code>prune</code> y <code>list</code>.
+              <p class="text-muted">Contribución principal: Nguyễn Thái Ngọc Duy. Se marca como experimental.</p>
             </div>
           </div>
           <div class="timeline-item">
-            <span class="timeline-year">2017</span>
+            <span class="timeline-year">2017+</span>
             <div class="timeline-content">
-              <strong>Git 2.15</strong> — Se agrega <code>worktree prune</code> y mejoras de estabilidad.
-            </div>
-          </div>
-          <div class="timeline-item">
-            <span class="timeline-year">2018</span>
-            <div class="timeline-content">
-              <strong>Git 2.17+</strong> — Considerado estable para uso en producción.
+              <strong>Evolución continua</strong> — Se agregan <code>lock</code>, <code>move</code>, <code>remove</code> y <code>repair</code> en versiones posteriores.
             </div>
           </div>
           <div class="timeline-item active">
             <span class="timeline-year">2026</span>
             <div class="timeline-content">
-              <strong>11 años disponible.</strong> Aún poco conocido en el día a día.
+              <strong>11 años disponible.</strong> Funcional y maduro, aún con advertencia oficial sobre submódulos.
             </div>
           </div>
         </div>
@@ -340,34 +343,40 @@
             </thead>
             <tbody>
               <tr>
-                <td>Velocidad</td>
-                <td>Rápido</td>
-                <td>Lento (red)</td>
-                <td class="highlight-col">Instantáneo</td>
+                <td>Propósito</td>
+                <td>Pausar cambios temporalmente</td>
+                <td>Repositorio independiente</td>
+                <td class="highlight-col">Contextos activos en paralelo</td>
               </tr>
               <tr>
-                <td>Espacio en disco</td>
-                <td>Nada extra</td>
-                <td>Duplica todo</td>
-                <td class="highlight-col">Solo archivos de trabajo</td>
-              </tr>
-              <tr>
-                <td>Riesgo de conflicto</td>
-                <td class="text-error">Alto</td>
-                <td>Ninguno</td>
-                <td class="highlight-col">Ninguno</td>
-              </tr>
-              <tr>
-                <td>Cambio de contexto</td>
-                <td class="text-error">Sí</td>
+                <td>Descarga objetos</td>
                 <td>No</td>
+                <td>Normalmente sí</td>
                 <td class="highlight-col">No</td>
               </tr>
               <tr>
-                <td>Historia compartida</td>
-                <td>Sí</td>
-                <td>No (copia)</td>
-                <td class="highlight-col">Sí</td>
+                <td>Directorio adicional</td>
+                <td>No</td>
+                <td>Sí (independiente)</td>
+                <td class="highlight-col">Sí (vinculado)</td>
+              </tr>
+              <tr>
+                <td>Conflicto al restaurar</td>
+                <td class="text-error">Posible</td>
+                <td>No aplica</td>
+                <td class="highlight-col">No aplica</td>
+              </tr>
+              <tr>
+                <td>Conflictos de merge/rebase</td>
+                <td>Posibles</td>
+                <td>Posibles</td>
+                <td class="highlight-col">Posibles</td>
+              </tr>
+              <tr>
+                <td>Configuración y remotes</td>
+                <td>Compartidos</td>
+                <td>Independientes</td>
+                <td class="highlight-col">Compartidos</td>
               </tr>
             </tbody>
           </table>
@@ -425,7 +434,7 @@
             <span class="step-number">1</span>
             <div class="step-content">
               <strong>En el repo principal:</strong>
-              <p>Git crea <code>.git/worktrees/&lt;nombre&gt;/</code> con su propio HEAD, index y refs</p>
+              <p>Git crea <code>.git/worktrees/&lt;nombre&gt;/</code> con su propio <code></code>HEAD</code> e <code>index</code></p>
             </div>
           </div>
           <div class="step-item">
@@ -438,8 +447,8 @@
           <div class="step-item">
             <span class="step-number">3</span>
             <div class="step-content">
-              <strong>Resultado:</strong>
-              <p>Dos directorios de trabajo independientes, un solo repositorio compartido</p>
+              <strong>Lo compartido:</strong>
+              <p>Objetos, remotes, la mayoría de refs y la configuración del repositorio siguen siendo compartidos</p>
             </div>
           </div>
         </div>
@@ -491,23 +500,23 @@
         <div class="rules-grid animate-in delay-1">
           <div class="rule-card">
             <div class="rule-icon">🚫</div>
-            <h3>Ramas únicas</h3>
-            <p>No puedes tener la misma rama en dos worktrees. Cada HEAD debe apuntar a una rama distinta.</p>
+            <h3>Ramas únicas (por defecto)</h3>
+            <p>Git evita que una misma rama esté activa en dos worktrees. Protege contra modificaciones concurrentes del mismo HEAD.</p>
           </div>
           <div class="rule-card">
             <div class="rule-icon">🏠</div>
-            <h3>Worktree principal protegido</h3>
-            <p>El worktree donde hiciste <code>git clone</code> es el propietario del <code>.git</code>. No se puede eliminar.</p>
+            <h3>Main worktree protegido</h3>
+            <p><code>git worktree remove</code> solo elimina linked worktrees. El main worktree no se puede eliminar con ese comando.</p>
           </div>
           <div class="rule-card">
             <div class="rule-icon">🔗</div>
-            <h3>Comparten</h3>
-            <p>Historia, remotes, stash, config global del repo.</p>
+            <h3>Compartido</h3>
+            <p>Objetos, la mayoría de refs (ramas, tags), remotes, configuración del repositorio.</p>
           </div>
           <div class="rule-card">
             <div class="rule-icon">🔒</div>
-            <h3>NO comparten</h3>
-            <p>Archivos de trabajo (working directory) ni el staging area (index).</p>
+            <h3>Independiente por worktree</h3>
+            <p>Working directory, <code>HEAD</code>, <code>index</code> (staging area) y el estado de operaciones como merge o rebase.</p>
           </div>
         </div>
       </div>
@@ -533,7 +542,7 @@
           </div>
           <div class="command-card">
             <code class="cmd-code">git worktree remove ../ruta</code>
-            <p>Eliminar un worktree</p>
+            <p>Eliminar un worktree (la rama sigue existiendo)</p>
           </div>
           <div class="command-card">
             <code class="cmd-code">git worktree prune</code>
@@ -590,22 +599,26 @@
     <!-- Slide 19: Cuándo NO usarlo -->
     <section class="slide" data-slide="19">
       <div class="slide-content">
-        <h2 class="animate-in">¿Cuándo <span class="text-error">no</span> usarlo?</h2>
+        <h2 class="animate-in">¿Cuándo <span class="text-error">no</span> compensa?</h2>
         <div class="not-use-list animate-in delay-1">
           <div class="not-use-item">
             <span class="not-icon">⚠️</span>
-            <p>Si solo trabajas en una rama a la vez y los cambios son rápidos (2 minutos) — un stash está bien</p>
+            <p>Si la interrupción es breve (2 min) y un stash simple resulta suficiente</p>
           </div>
           <div class="not-use-item">
             <span class="not-icon">⚠️</span>
-            <p>Si tu proyecto tiene <code>node_modules</code> pesados — cada worktree necesita su propio install</p>
+            <p>Si dos ramas compiten por los mismos recursos locales: puertos, bases de datos, colas, Docker</p>
           </div>
           <div class="not-use-item">
             <span class="not-icon">⚠️</span>
-            <p>Si tu IDE no maneja bien múltiples carpetas del mismo proyecto abiertas simultáneamente</p>
+            <p>Si el proyecto requiere setup costoso por carpeta (<code>mvn install</code>, <code>npm install</code>, builds pesados)</p>
+          </div>
+          <div class="not-use-item">
+            <span class="not-icon">⚠️</span>
+            <p>Si se necesita aislamiento fuerte de configuración o credenciales — ahí un clone o contenedor es mejor</p>
           </div>
         </div>
-        <p class="callout info animate-in delay-2">No es que no funcione — es que el beneficio puede no justificar el setup en esos casos.</p>
+        <p class="callout info animate-in delay-2">Worktree separa estado de código. No separa procesos, puertos, bases de datos ni infraestructura.</p>
       </div>
     </section>
 
