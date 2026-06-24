@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kahoot - Git Worktree</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; color: #333; }
+h1 { text-align: center; color: #46178f; }
+.subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+.question { background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 24px; border-left: 4px solid #46178f; page-break-inside: avoid; }
+.question h3 { margin: 0 0 12px 0; color: #46178f; }
+.options { list-style: none; padding: 0; margin: 0; }
+.options li { padding: 8px 12px; margin: 4px 0; border-radius: 6px; background: #fff; border: 1px solid #e0e0e0; }
+.options li.correct { background: #d4edda; border-color: #28a745; font-weight: bold; }
+.section-divider { border: none; border-top: 2px dashed #46178f; margin: 30px 0; }
+</style>
+</head>
+<body>
+
+<h1>🎮 Kahoot — Git Worktree</h1>
+<p class="subtitle">10 preguntas · 20-30 segundos cada una</p>
+
+<div class="question">
+<h3>Pregunta 1</h3>
+<p><strong>¿Qué es un git worktree?</strong></p>
+<ul class="options">
+<li>A) Un clon del repositorio</li>
+<li class="correct">B) ✅ Un directorio de trabajo adicional vinculado al mismo repo</li>
+<li>C) Una rama especial de Git</li>
+<li>D) Un plugin de Git</li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 2</h3>
+<p><strong>¿Qué comparten todos los worktrees de un mismo repo?</strong></p>
+<ul class="options">
+<li>A) Los archivos de trabajo</li>
+<li>B) El staging area (index)</li>
+<li class="correct">C) ✅ La historia de commits y los remotes</li>
+<li>D) Los archivos sin commitear</li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 3</h3>
+<p><strong>¿Puedes tener la misma rama en dos worktrees al mismo tiempo?</strong></p>
+<ul class="options">
+<li>A) Sí, siempre</li>
+<li>B) Sí, pero solo en modo lectura</li>
+<li class="correct">C) ✅ No, Git no lo permite</li>
+<li>D) Solo si usas --force</li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 4</h3>
+<p><strong>¿Cuál es el comando para crear un worktree nuevo?</strong></p>
+<ul class="options">
+<li>A) <code>git clone --worktree</code></li>
+<li>B) <code>git checkout --new-worktree</code></li>
+<li class="correct">C) ✅ <code>git worktree add</code></li>
+<li>D) <code>git branch --worktree</code></li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 5</h3>
+<p><strong>Estás a medio feature con cambios sin commitear. Llega un hotfix urgente. ¿Qué haces con worktree?</strong></p>
+<ul class="options">
+<li>A) <code>git stash</code> y cambiar de rama</li>
+<li>B) Commitear lo que hay y cambiar</li>
+<li>C) Clonar el repo de nuevo</li>
+<li class="correct">D) ✅ <code>git worktree add</code> y arreglar en otra carpeta</li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 6</h3>
+<p><strong>¿Qué hace <code>git worktree prune</code>?</strong></p>
+<ul class="options">
+<li>A) Borra todos los worktrees</li>
+<li class="correct">B) ✅ Limpia referencias a worktrees cuya carpeta ya no existe</li>
+<li>C) Actualiza todos los worktrees con los últimos cambios</li>
+<li>D) Fusiona los worktrees en uno solo</li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 7</h3>
+<p><strong>¿Cuál es la ventaja de worktree sobre clonar el repo de nuevo?</strong></p>
+<ul class="options">
+<li>A) Es más seguro</li>
+<li>B) Tiene mejor rendimiento de red</li>
+<li class="correct">C) ✅ Es instantáneo y no duplica la historia</li>
+<li>D) Permite trabajar offline</li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 8</h3>
+<p><strong>¿Qué pasa con tus cambios sin commitear cuando creas un worktree nuevo?</strong></p>
+<ul class="options">
+<li>A) Se copian al nuevo worktree</li>
+<li>B) Se pierden</li>
+<li>C) Se hace stash automáticamente</li>
+<li class="correct">D) ✅ No pasa nada, cada worktree tiene su propio directorio de trabajo</li>
+</ul>
+</div>
+
+<hr class="section-divider">
+
+<div class="question">
+<h3>Pregunta 9 — Worktree + IA</h3>
+<p><strong>¿Cuál es la ventaja de usar un agente de IA (como Kiro) en un worktree separado?</strong></p>
+<ul class="options">
+<li>A) El agente es más rápido</li>
+<li class="correct">B) ✅ Puedes seguir trabajando en tu rama mientras el agente trabaja en otra</li>
+<li>C) El agente necesita un worktree para funcionar</li>
+<li>D) Git trackea automáticamente qué escribió la IA</li>
+</ul>
+</div>
+
+<div class="question">
+<h3>Pregunta 10 — Worktree + IA</h3>
+<p><strong>¿Qué pasaría si intentas usar un agente de IA para arreglar un bug en otra rama SIN worktree?</strong></p>
+<ul class="options">
+<li>A) Funciona igual</li>
+<li class="correct">B) ✅ Tendrías que hacer stash o commit de tus cambios antes de cambiar de rama</li>
+<li>C) El agente crea el worktree automáticamente</li>
+<li>D) Git no permite usar IA sin worktree</li>
+</ul>
+</div>
+
+</body>
+</html>

@@ -49,7 +49,10 @@ git stash pop   # 💥 conflicto
 - Permite tener **múltiples directorios de trabajo** vinculados al mismo repositorio
 - Cada worktree tiene su propia rama checked out
 - Comparten el mismo `.git` (historia, remotes, refs)
-- Es como tener el repo clonado N veces, pero sin duplicar la historia
+- **Lo que NO se duplica:** la historia de Git (objects, commits, configuración)
+- **Lo que SÍ se crea nuevo:** el directorio de trabajo (archivos fuente, y cualquier dependencia como node_modules)
+
+> ⚠️ Si tu proyecto requiere `npm install` o builds pesados, cada worktree necesita su propio setup. Worktree ahorra la descarga de Git, no el setup del proyecto.
 
 ### Modelo mental
 ```
