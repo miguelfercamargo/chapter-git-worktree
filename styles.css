@@ -1113,26 +1113,27 @@ kbd {
 .print-btn {
   position: fixed;
   top: 20px;
-  left: 64px;
+  left: 62px;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent);
   background: var(--bg-surface);
-  color: var(--text-secondary);
+  color: var(--accent);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: var(--transition);
-  opacity: 0.4;
-  z-index: 100;
+  opacity: 0.7;
+  z-index: 999;
 }
 
 .print-btn:hover {
   opacity: 1;
   border-color: var(--accent);
   color: var(--accent);
+  transform: scale(1.1);
 }
 
 /* ---- Print Mode (triggered by JS) ---- */
