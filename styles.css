@@ -1115,52 +1115,58 @@ kbd {
    ======================================== */
 @media print {
   /* Reset layout */
-  body, .presentation {
+  html, body {
     overflow: visible !important;
     height: auto !important;
     width: auto !important;
-    background: white !important;
+    background: #0F1923 !important;
+  }
+
+  .presentation {
+    overflow: visible !important;
+    height: auto !important;
+    width: auto !important;
+    position: static !important;
   }
 
   /* Show all slides stacked */
-  .slide {
-    display: block !important;
-    opacity: 1 !important;
+  section.slide {
     position: relative !important;
+    display: flex !important;
+    opacity: 1 !important;
     transform: none !important;
+    pointer-events: auto !important;
     page-break-after: always;
     page-break-inside: avoid;
-    width: 100% !important;
+    width: 100vw !important;
     height: 100vh !important;
     min-height: 100vh;
-    background: var(--bg-primary) !important;
+    inset: auto !important;
+    background: #0F1923 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  .slide.exit-left {
+  section.slide.exit-left {
     transform: none !important;
     opacity: 1 !important;
   }
 
   /* Show all sub-steps */
-  .chat-msg {
-    display: block !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
+  .chat-msg,
   .chat-msg.visible,
   .chat-msg:not(.visible) {
     display: block !important;
     opacity: 1 !important;
     transform: none !important;
+    visibility: visible !important;
   }
 
   /* Show all animated elements */
   .animate-in {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
   }
 
   /* Hide interactive elements */
