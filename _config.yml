@@ -1,0 +1,9 @@
+exclude:
+  - KAHOOT-PREGUNTAS.pdf
+  - NOTAS-SPEAKER.md
+  - PRESENTACION.md
+  - JUSTIFICACION-KIRO.md
+  - KAHOOT-PREGUNTAS.md
+  - demo/
+  - reto/
+  - .idea/
