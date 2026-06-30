@@ -1109,6 +1109,66 @@ kbd {
   font-size: 0.75rem;
 }
 
+/* ---- Print Button ---- */
+.print-btn {
+  position: fixed;
+  top: 20px;
+  left: 64px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  opacity: 0.4;
+  z-index: 100;
+}
+
+.print-btn:hover {
+  opacity: 1;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---- Print Mode (triggered by JS) ---- */
+.print-mode,
+.print-mode .presentation {
+  overflow: visible !important;
+  height: auto !important;
+  position: static !important;
+}
+
+.print-mode section.slide.print-visible {
+  position: relative !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  inset: auto !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-height: 100vh;
+}
+
+.print-mode .animate-in {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.print-mode .nav-controls,
+.print-mode .home-btn,
+.print-mode .print-btn,
+.print-mode .keyboard-hint,
+.print-mode .progress-bar,
+.print-mode .transition-node {
+  display: none !important;
+}
+
 /* ========================================
    PRINT STYLES — Muestra todas las slides
    para exportar como PDF con Cmd+P

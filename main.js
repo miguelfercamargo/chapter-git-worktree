@@ -180,3 +180,42 @@
   // Initialize
   updatePresentation();
 })();
+
+// ========================================
+// PRINT / EXPORT PDF
+// Forces all slides visible, triggers print, then restores
+// ========================================
+(function () {
+  const printBtn = document.getElementById('printBtn');
+  if (!printBtn) return;
+
+  printBtn.addEventListener('click', function () {
+    const slides = document.querySelectorAll('.slide');
+    const body = document.body;
+
+    // Add print-mode class
+    body.classList.add('print-mode');
+
+    // Force all slides visible and show all sub-steps
+    slides.forEach(function (slide) {
+      slide.classList.add('print-visible');
+      const msgs = slide.querySelectorAll('.chat-msg');
+      msgs.forEach(function (msg) {
+        msg.classList.add('visible');
+      });
+    });
+
+    // Wait for reflow then print
+    setTimeout(function () {
+      window.print();
+
+      // Restore after print dialog closes
+      setTimeout(function () {
+        body.classList.remove('print-mode');
+        slides.forEach(function (slide) {
+          slide.classList.remove('print-visible');
+        });
+      }, 500);
+    }, 300);
+  });
+})();
