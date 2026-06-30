@@ -1108,3 +1108,81 @@ kbd {
   font-family: inherit;
   font-size: 0.75rem;
 }
+
+/* ========================================
+   PRINT STYLES — Muestra todas las slides
+   para exportar como PDF con Cmd+P
+   ======================================== */
+@media print {
+  /* Reset layout */
+  body, .presentation {
+    overflow: visible !important;
+    height: auto !important;
+    width: auto !important;
+    background: white !important;
+  }
+
+  /* Show all slides stacked */
+  .slide {
+    display: block !important;
+    opacity: 1 !important;
+    position: relative !important;
+    transform: none !important;
+    page-break-after: always;
+    page-break-inside: avoid;
+    width: 100% !important;
+    height: 100vh !important;
+    min-height: 100vh;
+    background: var(--bg-primary) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .slide.exit-left {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  /* Show all sub-steps */
+  .chat-msg {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .chat-msg.visible,
+  .chat-msg:not(.visible) {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Show all animated elements */
+  .animate-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Hide interactive elements */
+  .nav-controls,
+  .home-btn,
+  .keyboard-hint,
+  .progress-bar,
+  .transition-node {
+    display: none !important;
+  }
+
+  /* Disable SVG animations */
+  .worktree-svg .wt-branch,
+  .worktree-svg .wt-node,
+  .worktree-svg .wt-node-glow {
+    animation: none !important;
+    opacity: 0.5 !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .wt-node {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+  }
+}
